@@ -50,11 +50,17 @@ export default {
     },
     methods: {
         login() {
-            this.$refs.loginFormRef.validate(valid => {
+            this.$refs.loginFormRef.validate(async valid => {
                 console.log(valid);
                 if (!valid) return;
 
-                
+                // 异步请求方法，需要设置 await, 同时设置 async
+                //const result = await this.$http.post('login', this.loginForm);
+                // 使用 data 来解构返回的参数
+                const {data: res} = await this.$http.post('login', this.loginForm);
+                console.log(res);
+                if (res.meta.status !== 200) console.log("登陆失败");
+                console.log("登陆成功");
             });
         },
         // 点击重置按钮，
