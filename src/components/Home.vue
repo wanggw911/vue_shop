@@ -11,9 +11,7 @@
         <!-- 页面主体区域 -->
         <el-container>
             <!-- 左边侧边栏 -->
-            <el-aside width="200px">
-                <!-- 下面的代码貌似有点问题。。。 -->
-            <!-- <el-aside width="isCollapse ? '64px' : '200px'"> -->
+            <el-aside :width="isCollapse ? '64px' : '200px'">
                 <dir class="toggle-button" @click="toggleCollapse">|||</dir>
                 <el-menu :default-active="activePath" :router="true" :collapse="isCollapse" :collapse-transition="false" :unique-opened="true" background-color="#333744" text-color="#fff" active-text-color="#409EFF">
                     <!-- 一级菜单模板区 -->
@@ -67,7 +65,7 @@ export default {
     methods:{
         toggleCollapse() {
             //点击按钮，菜单的折叠和展开
-            //this.isCollapse = !this.isCollapse
+            this.isCollapse = !this.isCollapse
         },
         saveNavState(activePath) {
             this.activePath = activePath
