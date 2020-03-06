@@ -4,7 +4,8 @@ import {
     Main, Menu, Submenu, MenuItem, 
     Breadcrumb, BreadcrumbItem, 
     Card,
-    Row, Col
+    Row, Col,
+    Table, TableColumn
 } from 'element-ui'
 
 // 注册成全局可以用的组件
@@ -28,5 +29,8 @@ Vue.use(Card)
 
 Vue.use(Row)
 Vue.use(Col)
+
+Vue.use(Table)
+Vue.use(TableColumn)
 
 Vue.prototype.$message = Message
