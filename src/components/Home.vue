@@ -8,6 +8,7 @@
 export default {
     methods:{
         logout() {
+            this.$message.success('退出登录成功')
             window.sessionStorage.clear();
             this.$router.push("/login");
         }
