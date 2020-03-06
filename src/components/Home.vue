@@ -15,7 +15,7 @@
                 <!-- 下面的代码貌似有点问题。。。 -->
             <!-- <el-aside width="isCollapse ? '64px' : '200px'"> -->
                 <dir class="toggle-button" @click="toggleCollapse">|||</dir>
-                <el-menu :collapse="isCollapse" :collapse-transition="false" :unique-opened="true" background-color="#333744" text-color="#fff" active-text-color="#409EFF">
+                <el-menu :router="true" :collapse="isCollapse" :collapse-transition="false" :unique-opened="true" background-color="#333744" text-color="#fff" active-text-color="#409EFF">
                     <!-- 一级菜单模板区 -->
                     <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
                         <!-- 一级菜单模版区域 -->
@@ -24,7 +24,7 @@
                             <span>{{item.authName}}</span>
                         </template>
                         <!-- 二级菜单 -->
-                        <el-menu-item :index="subItem.id + ''" v-for="subItem in item.children" :key="subItem.id">
+                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id">
                             <template slot="title">
                                 <i class="el-icon-menu"></i>
                                 <span>{{subItem.authName}}</span>
@@ -85,7 +85,7 @@ export default {
                 'children': [
                     {'id': 11,
                     'authName': '用户列表',
-                    'path': '',
+                    'path': 'users',
                     'children': '',},
                 ],},
                 {'id': 2,
@@ -99,7 +99,7 @@ export default {
                     {'id': 22,
                     'authName': '权限列表',
                     'path': '',
-                    'children': '',},
+                    'children': 'rights',},
                 ],},
                 {'id': 5,
                 'authName': '商品管理',
