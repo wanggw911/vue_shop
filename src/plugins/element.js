@@ -7,7 +7,8 @@ import {
     Row, Col,
     Table, TableColumn,
     Switch,
-    Tooltip
+    Tooltip,
+    Pagination
 } from 'element-ui'
 
 // 注册成全局可以用的组件
@@ -31,4 +32,5 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Switch)
 Vue.use(Tooltip)
+Vue.use(Pagination)
 Vue.prototype.$message = Message

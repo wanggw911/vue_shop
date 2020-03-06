@@ -50,6 +50,17 @@
                     </template>
                 </el-table-column>
             </el-table>
+
+            <!-- 分页区域 -->
+            <el-pagination
+                @size-change="handleSizeChange"
+                :page-sizes="[1, 3, 5]"
+                @current-change="handleCurrentChange"
+                :current-page="queryInfo.pagenum"
+                :page-size="queryInfo.pageSize"  
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+            </el-pagination>
         </el-card>
     </div>
 </template>
@@ -68,10 +79,10 @@ export default {
         }
     },
     created() {
-        this.getUserList()
+        this.getUserList(1)
     },
     methods: {
-        async getUserList() {
+        async getUserList(page) {
             // const {data: res} = await this.$http.get('users', {
             //    params: this.queryInfo
             // })
@@ -82,8 +93,18 @@ export default {
             // this.total = res.data.total
             // console.log(res)
 
-            // 模拟用户    
-            this.userList = [
+            if(page == 1) {
+                this.userList = [
+                {
+                    'username': '张三',
+                    'email': '12321@qq.com',
+                    'phone': '18500001111',
+                    'role': '学生',
+                    'state': true,
+                }]
+            }
+            else if(page == 3) {
+                this.userList = [
                 {
                     'username': '张三',
                     'email': '12321@qq.com',
@@ -106,7 +127,63 @@ export default {
                     'state': true,
                 },
             ]
-        }
+            }
+            else {
+                this.userList = [
+                {
+                    'username': '张三',
+                    'email': '12321@qq.com',
+                    'phone': '18500001111',
+                    'role': '学生',
+                    'state': true,
+                },
+                {
+                    'username': '李四',
+                    'email': '12321@qq.com',
+                    'phone': '18500001111',
+                    'role': '老师',
+                    'state': false,
+                },
+                {
+                    'username': '王武',
+                    'email': '12321@qq.com',
+                    'phone': '18500001111',
+                    'role': '管理员',
+                    'state': true,
+                },
+                {
+                    'username': '李四',
+                    'email': '12321@qq.com',
+                    'phone': '18500001111',
+                    'role': '老师',
+                    'state': false,
+                },
+                {
+                    'username': '王武',
+                    'email': '12321@qq.com',
+                    'phone': '18500001111',
+                    'role': '管理员',
+                    'state': true,
+                },
+            ]
+            }
+
+            // 模拟用户    
+            this.total = page
+        },
+        // 监听 pagessize 改变的事件
+        handleSizeChange(newSize) {
+            console.log(newSize)
+            this.queryInfo.pagesize = newSize
+            this.getUserList(newSize)
+        },
+        // 监听页码值发生改变的事件
+        handleCurrentChange(newPage) {
+            console.log(newPage)
+            //翻页请求
+            this.queryInfo.pagenum = newPage
+            this.getUserList(1)
+        },
     }
 }
 </script>
