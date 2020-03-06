@@ -32,8 +32,8 @@ export default {
         return {
             // 登陆表单数据
             loginForm: {
-                username: '',
-                password: '',
+                username: 'admin',
+                password: '123456',
             },
             // 登陆表单验证规则
             loginFormRules: {
@@ -51,22 +51,37 @@ export default {
     methods: {
         login() {
             this.$refs.loginFormRef.validate(async valid => {
-                this.$message.success('登陆成功')
                 console.log(valid);
                 if (!valid) return;
 
                 // 异步请求方法，需要设置 await, 同时设置 async
                 //const result = await this.$http.post('login', this.loginForm);
                 // 使用 data 来解构返回的参数
-                const {data: res} = await this.$http.post('login', this.loginForm);
-                console.log(res);
-                if (res.meta.status !== 200) console.log("登陆失败");
-                console.log("登陆成功");
+                // const {data: res} = await this.$http.post('login', this.loginForm);
+                // console.log(res);
+                // if (res.meta.status !== 200) console.log("登陆失败");
+                // console.log("登陆成功");
+
+                /*
+                登录成功之后的操作
+                1. 将登录成功之后的 token，保存到客户端的 sessionStorage 中
+                    1.1 项目中除了登录之外的其他API接口，必须在登录之后才能访问
+                    1.2 token 只应在当前网站打开期间生效，所以 token 保存在 sessionStorage 中
+                2. 通过编程式导航跳转到后台主页，路由地址是 /home
+                */ 
+                // 模拟登录
+                if (this.loginForm.username == 'admin' && this.loginForm.password == '123456') {                
+                    this.$message.success('登录成功')
+                    window.sessionStorage.setItem("token", "123456")
+                    this.$router.push("/home")
+                }
+                else {
+                    this.$message.error('登录失败')
+                }
             });
         },
         // 点击重置按钮，
         resetLoginForm() {
-            this.$message.error('重置失败')
             console.log(this)
             // loginFormRef 表单的引用对象
             this.$refs.loginFormRef.resetFields();
