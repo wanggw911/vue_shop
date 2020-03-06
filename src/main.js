@@ -12,6 +12,9 @@ import axios from 'axios'
 
 // 配置请求的根路径
 axios.defaults.baseURL = 'http://'
+axios.interceptors.request.use(config => {
+   window.sessionStorage.getItem('token')
+})
 // 关联Vue属性
 Vue.prototype.$http = axios
 
