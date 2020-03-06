@@ -12,6 +12,7 @@
             <!-- 左边试图 -->
             <el-aside width="200px">
                 <el-menu
+                    :unique-opened="true"
                     background-color="#333744"
                     text-color="#fff"
                     active-text-color="#409EFF">
@@ -163,6 +164,10 @@ export default {
 
 .el-aside{
     background-color: #333744;
+    .el-menu{
+        //去掉右边的 1 个像素的边
+        border-right: none;
+    }
 }
 
 .el-main{
