@@ -51,6 +51,7 @@ export default {
     methods: {
         login() {
             this.$refs.loginFormRef.validate(async valid => {
+                this.$message.success('登陆成功')
                 console.log(valid);
                 if (!valid) return;
 
@@ -65,6 +66,7 @@ export default {
         },
         // 点击重置按钮，
         resetLoginForm() {
+            this.$message.error('重置失败')
             console.log(this)
             // loginFormRef 表单的引用对象
             this.$refs.loginFormRef.resetFields();
