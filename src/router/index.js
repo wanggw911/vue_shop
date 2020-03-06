@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
+import Welcome from '../components/Welcome.vue'
 
 Vue.use(VueRouter)
 
@@ -9,7 +10,13 @@ const routes = [
   // {  path: '/', redirect: '/login' },
   {  path: '/', redirect: '/home' },
   {  path: '/login', component: Login },
-  {  path: '/home', component: Home },
+  // welcome 需要在 home 页面显示，所以需要设置一下自路由的形式来设置path
+  {  path: '/home', 
+     component: Home, 
+     redirect: '/welcome', 
+     children: [
+      {  path: '/welcome',  component: Welcome },
+  ] },
 ]
 
 const router = new VueRouter({
