@@ -2,7 +2,10 @@
     <el-container class="home-container">
         <!-- 头部试图 -->
         <el-header>
-            Header
+            <div>
+                <img src="../assets/logo1.png" alt="">
+                <span>电商后台管理后台</span>
+            </div>
             <el-button type="info" @click="logout">退出</el-button>
         </el-header>
         <el-container>
@@ -34,6 +37,24 @@ export default {
 
 .el-header{
     background-color: #373D41;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+    color: #fff; //设置文本颜色
+    font-size: 20px;
+    //嵌套 CSS 布局
+    > div {
+        display: flex;
+        align-items: center;
+        img{
+            width: 50px;
+            height: 50px;
+        }
+        span {
+            margin-left: 15px;
+        }
+    }
 }
 
 .el-aside{
