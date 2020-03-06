@@ -173,13 +173,13 @@ export default {
         },
         // 监听 pagessize 改变的事件
         handleSizeChange(newSize) {
-            console.log(newSize)
+            //console.log(newSize)
             this.queryInfo.pagesize = newSize
             this.getUserList(newSize)
         },
         // 监听页码值发生改变的事件
         handleCurrentChange(newPage) {
-            console.log(newPage)
+            //console.log(newPage)
             //翻页请求
             this.queryInfo.pagenum = newPage
             this.getUserList(1)
