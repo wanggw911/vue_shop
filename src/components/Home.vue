@@ -16,18 +16,17 @@
                     text-color="#fff"
                     active-text-color="#ffd04b">
                     <!-- 一级菜单模板区 -->
-                    <el-submenu index="1">
+                    <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
                         <!-- 一级菜单模版区域 -->
                         <template slot="title">
                             <i class="el-icon-location"></i>
-                            <span>导航一</span>
+                            <span>{{item.authName}}</span>
                         </template>
-
                         <!-- 二级菜单 -->
-                        <el-menu-item>
+                        <el-menu-item :index="subItem.id + ''" v-for="subItem in item.children" :key="subItem.id">
                             <template slot="title">
                                 <i class="el-icon-location"></i>
-                                <span>导航一</span>
+                                <span>{{subItem.authName}}</span>
                             </template>
                         </el-menu-item>
                     </el-submenu>
@@ -41,12 +40,88 @@
 
 <script>
 export default {
+    data() {
+        return {
+            menuList: []
+        }
+    },
+    // 界面一加载的时候，就获取左侧菜单的数据
+    created() {
+        this.getMenuList()
+    },
     methods:{
         logout() {
-            this.$message.success('退出登录成功')
+            this.$message.success('退出登录成功');
             window.sessionStorage.clear();
             this.$router.push("/login");
-        }
+        },
+        getMenuList() {
+            // 加载菜单数据
+            // const {data: res} = await this.$http.get('http');
+            // if(res.meta.status !== 200) return this.$message.error(res.meta.msg)
+            //console.log(res)
+
+            // 挂载到页面data里面去
+            this.menuList = [
+                {'id': 1,
+                'authName': '用户管理',
+                'path': '',
+                'children': [
+                    {'id': 11,
+                    'authName': '用户列表',
+                    'path': '',
+                    'children': '',},
+                ],},
+                {'id': 2,
+                'authName': '权限管理',
+                'path': '',
+                'children': [
+                    {'id': 21,
+                    'authName': '角色列表',
+                    'path': '',
+                    'children': '',},
+                    {'id': 22,
+                    'authName': '权限列表',
+                    'path': '',
+                    'children': '',},
+                ],},
+                {'id': 5,
+                'authName': '商品管理',
+                'path': '',
+                'children': [
+                    {'id': 51,
+                    'authName': '商品列表',
+                    'path': '',
+                    'children': '',},
+                    {'id': 52,
+                    'authName': '分类参数',
+                    'path': '',
+                    'children': '',},
+                    {'id': 53,
+                    'authName': '商品分类',
+                    'path': '',
+                    'children': '',},
+                ],},
+                {'id': 3,
+                'authName': '订单管理',
+                'path': '',
+                'children': [
+                    {'id': 31,
+                    'authName': '订单列表',
+                    'path': '',
+                    'children': '',},
+                ],},
+                {'id': 4,
+                'authName': '数据管理',
+                'path': '',
+                'children': [
+                    {'id': 41,
+                    'authName': '数据报表',
+                    'path': '',
+                    'children': '',},
+                ],},
+            ]
+        },
     }
 }
 </script>
