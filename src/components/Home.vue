@@ -61,11 +61,14 @@ export default {
     created() {
         this.getMenuList()
         this.activePath = window.sessionStorage.getItem('activePath')
+        this.isCollapse = window.sessionStorage.getItem('isCollapse') == "true"
     },
     methods:{
         toggleCollapse() {
             //点击按钮，菜单的折叠和展开
             this.isCollapse = !this.isCollapse
+            //保存菜单栏是否展开关闭的状态
+            window.sessionStorage.setItem('isCollapse', this.isCollapse)
         },
         saveNavState(activePath) {
             this.activePath = activePath

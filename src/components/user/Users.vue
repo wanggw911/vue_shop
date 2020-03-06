@@ -26,12 +26,29 @@
 
             <!-- 用户列表区域 --> 
             <el-table :data="userList" border stripe> 
+                <!-- 设置表格的索引列 -->
+                <el-table-column type="index"></el-table-column>
                 <el-table-column label="姓名" prop="username"></el-table-column>
                 <el-table-column label="邮箱" prop="email"></el-table-column>
                 <el-table-column label="电话" prop="phone"></el-table-column>
                 <el-table-column label="角色" prop="role"></el-table-column>
-                <el-table-column label="状态" prop="state"></el-table-column>
-                <el-table-column label="操作" prop="action"></el-table-column>
+                <el-table-column label="状态">
+                    <!-- 使用了下面的作用域插槽，就可以不写了 prop 了 prop="state"-->
+                    <template slot-scope="scope">
+                        <!-- active-color="#13ce66" inactive-color="#ff4949" -->
+                        <el-switch v-model="scope.row.state">
+                        </el-switch>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="180px">
+                    <template>
+                        <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+                        <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                        <el-tooltip effect="dark" content="编辑" placement="top" :enterable="false">
+                            <el-button type="primary" icon="el-icon-setting" size="mini"></el-button>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
             </el-table>
         </el-card>
     </div>

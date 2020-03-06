@@ -5,7 +5,9 @@ import {
     Breadcrumb, BreadcrumbItem, 
     Card,
     Row, Col,
-    Table, TableColumn
+    Table, TableColumn,
+    Switch,
+    Tooltip
 } from 'element-ui'
 
 // 注册成全局可以用的组件
@@ -17,20 +19,16 @@ Vue.use(Container)
 Vue.use(Header)
 Vue.use(Aside)
 Vue.use(Main)
-
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
-
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
-
 Vue.use(Card)
-
 Vue.use(Row)
 Vue.use(Col)
-
 Vue.use(Table)
 Vue.use(TableColumn)
-
+Vue.use(Switch)
+Vue.use(Tooltip)
 Vue.prototype.$message = Message
