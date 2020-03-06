@@ -15,7 +15,7 @@
                 <!-- 下面的代码貌似有点问题。。。 -->
             <!-- <el-aside width="isCollapse ? '64px' : '200px'"> -->
                 <dir class="toggle-button" @click="toggleCollapse">|||</dir>
-                <el-menu :router="true" :collapse="isCollapse" :collapse-transition="false" :unique-opened="true" background-color="#333744" text-color="#fff" active-text-color="#409EFF">
+                <el-menu :default-active="activePath" :router="true" :collapse="isCollapse" :collapse-transition="false" :unique-opened="true" background-color="#333744" text-color="#fff" active-text-color="#409EFF">
                     <!-- 一级菜单模板区 -->
                     <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
                         <!-- 一级菜单模版区域 -->
@@ -24,7 +24,7 @@
                             <span>{{item.authName}}</span>
                         </template>
                         <!-- 二级菜单 -->
-                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id">
+                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id" @click="saveNavState('/' + subItem.path)">
                             <template slot="title">
                                 <i class="el-icon-menu"></i>
                                 <span>{{subItem.authName}}</span>
@@ -47,6 +47,8 @@ export default {
     data() {
         return {
             isCollapse: false,
+            //被激活的链接地址
+            activePath: '',
             menuList: [],
             iconsObject: {
                 '1': 'iconfont icon-user',
@@ -60,11 +62,17 @@ export default {
     // 界面一加载的时候，就获取左侧菜单的数据
     created() {
         this.getMenuList()
+        this.activePath = window.sessionStorage.getItem('activePath')
     },
     methods:{
         toggleCollapse() {
             //点击按钮，菜单的折叠和展开
             //this.isCollapse = !this.isCollapse
+        },
+        saveNavState(activePath) {
+            this.activePath = activePath
+            //保存链接的激活状态
+            window.sessionStorage.setItem('activePath', activePath)
         },
         logout() {
             this.$message.success('退出登录成功');
