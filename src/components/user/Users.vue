@@ -36,7 +36,7 @@
                     <!-- 使用了下面的作用域插槽，就可以不写了 prop 了 prop="state"-->
                     <template slot-scope="scope">
                         <!-- active-color="#13ce66" inactive-color="#ff4949" -->
-                        <el-switch v-model="scope.row.state">
+                        <el-switch v-model="scope.row.mg_state" @change="userStateChanged(scope.row)">
                         </el-switch>
                     </template>
                 </el-table-column>
@@ -105,6 +105,15 @@ export default {
             //翻页请求
             this.queryInfo.pagenum = newPage
             this.getUserList(1)
+        },
+        async userStateChanged(userInfo) {
+            console.log('userInfo'+userInfo)
+            const {data: res} = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
+            if (res.meta.status !== 200) {
+                userInfo.mg_state = !userInfo.mg_state
+                return this.$message.error('更新用户状态失败')
+            }
+            this.$message.success('更新用户状态成功')
         },
     }
 }
