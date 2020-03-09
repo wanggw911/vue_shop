@@ -15,8 +15,8 @@
                 <!-- gutter 设置每个格子之间的间距 -->
                 <!-- 使用列布局，来避免整个输入框占满一行 -->
                 <el-col :span="10">
-                    <el-input placeholder="请输入内容" class="input-with-select">
-                        <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList">
+                        <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
                     </el-input>
                 </el-col>
                 <el-col :span="4">
