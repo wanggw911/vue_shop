@@ -10,6 +10,7 @@ module.exports = {
         styleLibraryName: 'theme-chalk'
       }
     ],
-    'transform-remove-console',
+    //上线打开，开发时禁用
+    //'transform-remove-console',
   ]
 }
