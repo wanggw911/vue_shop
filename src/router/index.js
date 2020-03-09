@@ -8,8 +8,8 @@ import Users from '../components/user/Users.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  // {  path: '/', redirect: '/login' },
-  {  path: '/', redirect: '/home' },
+  {  path: '/', redirect: '/login' },
+  // {  path: '/', redirect: '/home' },
   {  path: '/login', component: Login },
   // welcome 需要在 home 页面显示，所以需要设置一下自路由的形式来设置path
   {  path: '/home', 

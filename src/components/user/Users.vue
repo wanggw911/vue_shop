@@ -30,8 +30,8 @@
                 <el-table-column type="index"></el-table-column>
                 <el-table-column label="姓名" prop="username"></el-table-column>
                 <el-table-column label="邮箱" prop="email"></el-table-column>
-                <el-table-column label="电话" prop="phone"></el-table-column>
-                <el-table-column label="角色" prop="role"></el-table-column>
+                <el-table-column label="电话" prop="mobile"></el-table-column>
+                <el-table-column label="角色" prop="role_name"></el-table-column>
                 <el-table-column label="状态">
                     <!-- 使用了下面的作用域插槽，就可以不写了 prop 了 prop="state"-->
                     <template slot-scope="scope">
@@ -72,7 +72,7 @@ export default {
             queryInfo: {
                 query: '',
                 pagenum: 1,
-                pageSize: 2,
+                pagesize: 3,
             },
             userList: [],
             total: 0,
@@ -83,93 +83,15 @@ export default {
     },
     methods: {
         async getUserList(page) {
-            // const {data: res} = await this.$http.get('users', {
-            //    params: this.queryInfo
-            // })
-            // if(res.meta.status !== 200) {
-            //     return this.$message.error('获取用户列表失败')
-            // }
-            // this.userList = res.data.users
-            // this.total = res.data.total
-            // console.log(res)
-
-            if(page == 1) {
-                this.userList = [
-                {
-                    'username': '张三',
-                    'email': '12321@qq.com',
-                    'phone': '18500001111',
-                    'role': '学生',
-                    'state': true,
-                }]
+            const {data: res} = await this.$http.get('users', {
+               params: this.queryInfo
+            })
+            if(res.meta.status !== 200) {
+                return this.$message.error('获取用户列表失败')
             }
-            else if(page == 3) {
-                this.userList = [
-                {
-                    'username': '张三',
-                    'email': '12321@qq.com',
-                    'phone': '18500001111',
-                    'role': '学生',
-                    'state': true,
-                },
-                {
-                    'username': '李四',
-                    'email': '12321@qq.com',
-                    'phone': '18500001111',
-                    'role': '老师',
-                    'state': false,
-                },
-                {
-                    'username': '王武',
-                    'email': '12321@qq.com',
-                    'phone': '18500001111',
-                    'role': '管理员',
-                    'state': true,
-                },
-            ]
-            }
-            else {
-                this.userList = [
-                {
-                    'username': '张三',
-                    'email': '12321@qq.com',
-                    'phone': '18500001111',
-                    'role': '学生',
-                    'state': true,
-                },
-                {
-                    'username': '李四',
-                    'email': '12321@qq.com',
-                    'phone': '18500001111',
-                    'role': '老师',
-                    'state': false,
-                },
-                {
-                    'username': '王武',
-                    'email': '12321@qq.com',
-                    'phone': '18500001111',
-                    'role': '管理员',
-                    'state': true,
-                },
-                {
-                    'username': '李四',
-                    'email': '12321@qq.com',
-                    'phone': '18500001111',
-                    'role': '老师',
-                    'state': false,
-                },
-                {
-                    'username': '王武',
-                    'email': '12321@qq.com',
-                    'phone': '18500001111',
-                    'role': '管理员',
-                    'state': true,
-                },
-            ]
-            }
-
-            // 模拟用户    
-            this.total = page
+            this.userList = res.data.users
+            this.total = res.data.total
+            console.log(res)
         },
         // 监听 pagessize 改变的事件
         handleSizeChange(newSize) {
