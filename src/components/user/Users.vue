@@ -101,6 +101,27 @@
 <script>
 export default {
     data() {
+        // 验证邮箱的规则，注意 var 定义后面不能接逗号
+        var checkEmail = (rule, value, cb) => {
+            const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+
+            if (regEmail.test(value)) {
+                return cb()
+            }
+
+            cb(new Error('请输入合法的邮箱'))
+        }
+        // 验证手机号的规则
+        var checkMobile = (rule, value, cb) => {
+            const regMobile = /^(0|86|17951)?(13[0-9]|15[0123456789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+
+            if (regMobile.test(value)) {
+                return cb()
+            }
+
+            cb(new Error('请输入合法的手机号'))
+        }
+
         return {
             queryInfo: {
                 query: '',
@@ -130,11 +151,11 @@ export default {
                 ],
                 email: [
                     { required: true, message: '请输入邮箱', trigger: 'blur' },
-                    { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' },
+                    { validator: checkEmail, trigger: 'blur' }
                 ],
                 mobile: [
                     { required: true, message: '请输入手机号', trigger: 'blur' },
-                    { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' },
+                    { validator: checkMobile, trigger: 'blur' }
                 ],
             },
         }
