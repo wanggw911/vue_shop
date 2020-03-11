@@ -64,27 +64,18 @@
         </el-card>
 
         <!-- 弹出对话框 -->
-        <el-dialog
-            title="添加用户"
-            :visible.sync="addDialogVisible"
-            width="50%">
+        <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
             <!-- 内容主体区 -->
             <el-form :model="addUserForm" :rules="addUserRules" ref="addUserFormRef" label-width="70px">
                 <el-form-item label="用户名" prop="username">
                     <el-input v-model="addUserForm.username"></el-input>
                 </el-form-item>
-            </el-form>
-            <el-form :model="addUserForm" :rules="addUserRules" ref="addUserFormRef" label-width="70px">
                 <el-form-item label="密码" prop="password">
                     <el-input v-model="addUserForm.password"></el-input>
                 </el-form-item>
-            </el-form>
-            <el-form :model="addUserForm" :rules="addUserRules" ref="addUserFormRef" label-width="70px">
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="addUserForm.email"></el-input>
                 </el-form-item>
-            </el-form>
-            <el-form :model="addUserForm" :rules="addUserRules" ref="addUserFormRef" label-width="70px">
                 <el-form-item label="手机" prop="mobile">
                     <el-input v-model="addUserForm.mobile"></el-input>
                 </el-form-item>
@@ -187,6 +178,11 @@ export default {
             //翻页请求
             this.queryInfo.pagenum = newPage
             this.getUserList(1)
+        },
+        // 监听添加用户对话框的关闭事件
+        addDialogClosed() {
+            console.log('监听添加用户对话框的关闭事件')
+            this.$refs.addUserFormRef.resetFields()
         },
         async userStateChanged(userInfo) {
             console.log('userInfo'+userInfo)
