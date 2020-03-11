@@ -80,72 +80,11 @@ export default {
             window.sessionStorage.clear();
             this.$router.push("/login");
         },
-        getMenuList() {
-            // 加载菜单数据
-            // const {data: res} = await this.$http.get('http');
-            // if(res.meta.status !== 200) return this.$message.error(res.meta.msg)
-            //console.log(res)
-
-            // 挂载到页面data里面去
-            this.menuList = [
-                {'id': 1,
-                'authName': '用户管理',
-                'path': '',
-                'children': [
-                    {'id': 11,
-                    'authName': '用户列表',
-                    'path': 'users',
-                    'children': '',},
-                ],},
-                {'id': 2,
-                'authName': '权限管理',
-                'path': '',
-                'children': [
-                    {'id': 21,
-                    'authName': '角色列表',
-                    'path': '',
-                    'children': '',},
-                    {'id': 22,
-                    'authName': '权限列表',
-                    'path': '',
-                    'children': 'rights',},
-                ],},
-                {'id': 5,
-                'authName': '商品管理',
-                'path': '',
-                'children': [
-                    {'id': 51,
-                    'authName': '商品列表',
-                    'path': '',
-                    'children': '',},
-                    {'id': 52,
-                    'authName': '分类参数',
-                    'path': '',
-                    'children': '',},
-                    {'id': 53,
-                    'authName': '商品分类',
-                    'path': '',
-                    'children': '',},
-                ],},
-                {'id': 3,
-                'authName': '订单管理',
-                'path': '',
-                'children': [
-                    {'id': 31,
-                    'authName': '订单列表',
-                    'path': '',
-                    'children': '',},
-                ],},
-                {'id': 4,
-                'authName': '数据管理',
-                'path': '',
-                'children': [
-                    {'id': 41,
-                    'authName': '数据报表',
-                    'path': '',
-                    'children': '',},
-                ],},
-            ]
+        async getMenuList() {
+            const {data: res} = await this.$http.get('menus');
+            if(res.meta.status !== 200) return this.$message.error(res.meta.msg)
+            console.log(res)
+            this.menuList = res.data
         },
     }
 }
