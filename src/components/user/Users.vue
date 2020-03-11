@@ -57,7 +57,7 @@
                 :page-sizes="[1, 3, 5]"
                 @current-change="handleCurrentChange"
                 :current-page="queryInfo.pagenum"
-                :page-size="queryInfo.pageSize"  
+                :page-size="queryInfo.pagesize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
@@ -238,7 +238,7 @@ export default {
                 //隐藏添加用户的对话框
                 this.addDialogVisible = false
                 //重新获取用户列表
-                this.getUserList(1)
+                this.getUserList()
             })
         },
         editUserAction() {
@@ -246,8 +246,10 @@ export default {
             this.$refs.editUserFormRef.validate(async valid => {
                 if (!valid) return
 
-                console.log('表单数据是：'+this.editUserForm.toString())
-                const {data: res} = await this.$http.put('users/', this.editUserForm.id, {
+                console.log('表单数据是 id：'+this.editUserForm.id)
+                console.log('表单数据是 mail：'+this.editUserForm.email)
+                console.log('表单数据是 mobile：'+this.editUserForm.mobile)
+                const {data: res} = await this.$http.put('users/' + this.editUserForm.id, {
                     email: this.editUserForm.email,
                     mobile: this.editUserForm.mobile
                 })
