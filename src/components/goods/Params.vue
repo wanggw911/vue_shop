@@ -33,7 +33,11 @@
                     <!-- 动态参数表格 -->
                     <el-table :data="manyTableData" border stripe> 
                         <!-- 展开行 -->
-                        <el-table-column type="expand"></el-table-column>
+                        <el-table-column type="expand">
+                            <template slot-scope="scope">
+                                <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable>{{item}}</el-tag>
+                            </template>
+                        </el-table-column>
                         <!-- 索引列 -->
                         <el-table-column type="index" label="#"></el-table-column>
                         <el-table-column label="参数名称" prop="attr_name"></el-table-column>
@@ -209,6 +213,12 @@ export default {
                 return this.$message.error('获取列表失败！')
             }
             console.log(res.data)
+            // 赋值之前，先把字符串分割成数组
+            res.data.forEach(element => {
+                element.attr_vals = element.attr_vals.split('')
+            })
+            console.log(res.data)
+
             if (this.activeName === 'many') {
                 this.manyTableData = res.data
             }
@@ -288,5 +298,8 @@ export default {
 <style lang="less" scoped>
 .cate_opt {
     margin: 15px 0;
+}
+.el-tag {
+    margin: 5px;
 }
 </style>
