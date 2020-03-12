@@ -35,7 +35,21 @@
                         <!-- 展开行 -->
                         <el-table-column type="expand">
                             <template slot-scope="scope">
+                                <!-- for循环展示所有的标签 -->
                                 <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable>{{item}}</el-tag>
+                                <!-- 添加tag的输入框 -->
+                                <el-input
+                                    class="input-new-tag"
+                                    v-if="scope.row.inputVisible"
+                                    v-model="scope.row.inputValue"
+                                    ref="saveTagInput"
+                                    size="small"
+                                    @keyup.enter.native="handleInputConfirm"
+                                    @blur="handleInputConfirm"
+                                    >
+                                </el-input>
+                                 <!-- 添加tag的按钮 -->
+                                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
                             </template>
                         </el-table-column>
                         <!-- 索引列 -->
@@ -146,7 +160,7 @@ export default {
                     { required: true, message: '请输入分类名称', trigger: 'blur' },
                     { min: 2, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' },
                 ],
-            }
+            },
         }
     },
     created() {
@@ -216,6 +230,9 @@ export default {
             // 赋值之前，先把字符串分割成数组
             res.data.forEach(element => {
                 element.attr_vals = element.attr_vals.split('')
+
+                element.inputVisible = false
+                element.inputValue = ''
             })
             console.log(res.data)
 
@@ -290,7 +307,18 @@ export default {
             }
             this.$message.success('删除参数成功')
             this.getAttributesData()
-        }
+        },
+        handleInputConfirm() {
+
+        },
+        showInput(row) {
+            row.inputVisible = true
+            // 让文本框自动获得焦点
+            // nextTick 方法的作用：就是当页面上元素被重新渲染之后，才会执行回调函数中的代码
+            this.$nextTick(_ => {
+                this.$refs.saveTagInput.$refs.input.focus();
+            })
+        },
     }
 }
 </script>
@@ -301,5 +329,8 @@ export default {
 }
 .el-tag {
     margin: 5px;
+}
+.input-new-tag{
+    width: 120px;
 }
 </style>
