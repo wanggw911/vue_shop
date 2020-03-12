@@ -199,15 +199,19 @@ export default {
             this.parentCateList = res.data
         },
         addCateAction () {
+            console.log('addCateAction')
             console.log(this.addCateForm)
 
              this.$refs.addCateFormRef.validate(async valid => {
                  if(!valid) return 
 
-                 const {data: res} = await this.$http.get('categories', this.addCateForm)
+                 const {data: res} = await this.$http.post('categories', this.addCateForm)
+                 console.log(res)
                  if (res.meta.status !== 200) {
+                    console.log('addCateAction 添加商品分类失败！')
                     return this.$message.error('添加商品分类失败！')
                  }
+                 console.log('addCateAction 添加商品分类成功！')
                  this.$message.success('添加商品分类成功！')
 
                  this.getCategoryList()
