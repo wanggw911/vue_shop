@@ -39,8 +39,8 @@
                         <el-table-column label="参数名称" prop="attr_name"></el-table-column>
                         <el-table-column label="操作" width="180px">
                             <template slot-scope="scope">
-                                <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditUserInfoDialog(scope.row.id)"></el-button>
-                                <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
+                                <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)">编辑</el-button>
+                                <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -60,8 +60,8 @@
                         <el-table-column label="属性名称" prop="attr_name"></el-table-column>
                         <el-table-column label="操作" width="180px">
                             <template slot-scope="scope">
-                                <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditUserInfoDialog(scope.row.id)"></el-button>
-                                <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
+                                <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)">编辑</el-button>
+                                <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -83,6 +83,21 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addDialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="addParamAction">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 修改参数对话框 -->
+        <el-dialog :title="'修改' + titleText" :visible.sync="editDialogVisible" width="50%" @close="editDialogClosed">
+            <!-- 内容主体区 -->
+            <el-form :model="editParamForm" :rules="editParamRules" ref="editParamFormRef" label-width="70px">
+                <el-form-item :label="titleText" prop="attr_name">
+                    <el-input v-model="editParamForm.attr_name"></el-input>
+                </el-form-item>
+            </el-form>
+            <!-- 底部区域 -->
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="editParamAction">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -118,6 +133,16 @@ export default {
                     { min: 2, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' },
                 ],
             },
+            editDialogVisible: false,
+            editParamForm: {
+                attr_name: '',
+            }, 
+            editParamRules: {
+                attr_name: [
+                    { required: true, message: '请输入分类名称', trigger: 'blur' },
+                    { min: 2, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' },
+                ],
+            }
         }
     },
     created() {
@@ -208,6 +233,31 @@ export default {
                  this.$message.success('添加参数成功！')
 
                  this.addDialogVisible = false
+                 this.getAttributesData()
+             })
+        },
+        showEditDialog(params) {
+            console.log(params)
+            this.editParamForm = params
+            this.editDialogVisible = true
+        },
+        editDialogClosed() {
+            this.$refs.editParamFormRef.resetFields()
+        },
+        editParamAction() {
+            this.$refs.editParamFormRef.validate(async valid => {
+                 if(!valid) return 
+
+                 const {data: res} = await this.$http.put(`categories/${this.cateId}/attributes/${this.editParamForm.attr_id}`, {
+                     attr_name: this.editParamForm.attr_name,
+                     attr_sel: this.activeName
+                 })
+                 if (res.meta.status !== 200) {
+                    return this.$message.error('修改参数失败！')
+                 }
+                 this.$message.success('修改参数成功！')
+
+                 this.editDialogVisible = false
                  this.getAttributesData()
              })
         },
