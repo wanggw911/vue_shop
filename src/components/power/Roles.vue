@@ -23,7 +23,7 @@
                     <template slot-scope="scope">
                         <!-- 使用列布局来渲染展开的后的试图 -->
                         <!-- 使用 for 循环来渲染多行数据 -->
-                        <el-row :class="['bdbottom', i1 === 0 ? 'bdtop' : '']" v-for="(item1, i1) in scope.row.children" :key="item1.id">
+                        <el-row :class="['vcenter', 'bdbottom', i1 === 0 ? 'bdtop' : '']" v-for="(item1, i1) in scope.row.children" :key="item1.id">
                             <!-- 渲染一级权限，总共分为24列，前面5列，后面19列 -->
                             <el-col :span="5">
                                 <el-tag>{{item1.authName}}</el-tag>
@@ -33,12 +33,13 @@
                             <!-- 渲染二级和三级权限 -->
                             <el-col :span="19">
                                 <!-- 通过 for 循环 嵌套渲染二级权限 -->
-                                <el-row :class="[i2 === 0? '' :'bdtop']" v-for="(item2, i2) in item1.children" :key="item2.id">
+                                <el-row :class="['vcenter', i2 === 0? '' :'bdtop']" v-for="(item2, i2) in item1.children" :key="item2.id">
                                     <el-col :span="6">
                                         <el-tag type="success">{{item2.authName}}</el-tag>
                                         <i class="el-icon-caret-right"></i>
                                     </el-col>
                                     <el-col :span="18">
+                                        <!-- 渲染出三级结构 -->
                                         <el-tag type="warning" v-for="(item3) in item2.children" :key="item3.id">
                                             {{item3.authName}}
                                         </el-tag>
@@ -46,10 +47,6 @@
                                 </el-row>    
                             </el-col>
                         </el-row>
-
-                        <pre>
-                            {{scope.row}}
-                        </pre>
                     </template>
                 </el-table-column>
                 <!-- 索引列 -->
@@ -110,6 +107,11 @@ export default {
 
 .bdbottom {
     border-bottom: 1px solid #eee;
+}
+
+.vcenter {
+    display: flex;
+    align-items: center;
 }
 
 </style>
