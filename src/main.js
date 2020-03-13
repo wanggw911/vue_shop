@@ -34,7 +34,6 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(config => {
   //console.log(config)
   NProgress.done()
-  config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })
 // 关联Vue属性
