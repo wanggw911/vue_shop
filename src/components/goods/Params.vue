@@ -219,16 +219,11 @@ export default {
             this.getAttributesData()
         },
         async getAttributesData() {
-            console.log('getAttributesData----')
-            console.log(this.cateId)
             // 发起请求，获取数据
             const {data: res} = await this.$http.get(`categories/${this.cateId}/attributes`, {params: {sel: this.activeName}})
-            console.log(res)
-            console.log('getAttributesData----')
             if (res.meta.status !== 200) {
                 return this.$message.error('获取列表失败！')
             }
-            console.log(res.data)
             // 赋值之前，先把字符串分割成数组
             res.data.forEach(element => {
                 element.attr_vals = element.attr_vals.split('')

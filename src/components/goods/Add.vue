@@ -27,7 +27,7 @@
             <!-- 只允许 form 嵌套 tabs，不允许 tabs 嵌套 form -->
             <el-form :model="addGoodsForm" :rules="addGoodsRules" ref="ruleForm" label-width="100px" label-position="top">
                 <!-- style="height: 200px;" -->
-                <el-tabs :tab-position="'left'" v-model="activeIndex" :before-leave="beforeLeave">
+                <el-tabs :tab-position="'left'" v-model="activeIndex" :before-leave="beforeLeave" @tab-click="tabClick">
 
                     <el-tab-pane label="基本信息" name="0">    
                         <el-form-item label="商品名称" prop="goods_name">
@@ -49,13 +49,36 @@
                         </el-form-item>
                     </el-tab-pane>
 
-                    <el-tab-pane label="商品参数" name="1">商品参数</el-tab-pane>
-                    <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
-                    <el-tab-pane label="商品照片" name="3">商品照片</el-tab-pane>
+                    <el-tab-pane label="商品参数" name="1">
+                        <el-form-item :label="item.attr_name" v-for="item in manyTableData" :key="item.attr_id">
+                            <el-checkbox-group v-model="item.attr_vals">
+                                <el-checkbox border :label="cb" v-for="(cb, i) in item.attr_vals" :key="i"></el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+                    </el-tab-pane>
+
+                    <el-tab-pane label="商品属性" name="2">
+                        <el-form-item :label="item.attr_name" v-for="item in onlyTableData" :key="item.attr_id">
+                            <el-input v-model="item.attr_vals"></el-input>
+                        </el-form-item>
+                    </el-tab-pane>
+
+                    <el-tab-pane label="商品照片" name="3">
+                        <el-upload class="upload-demo" :action="uploadURL" :headers="headerObj" :on-preview="handlePreview" :on-remove="handleRemove" list-type="picture" :on-success="handleSuccess">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>
+                    </el-tab-pane>
                     <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
                 </el-tabs>
             </el-form>
         </el-card>
+
+        <!-- 预览图片的对话框 -->
+        <el-dialog title="图片预览" :visible.sync="previewVisible" width="50%" @close="previewDialogClosed">
+            <img class="previewImg" :src="previewPath" alt="">
+        </el-dialog>
+
     </div>
 </template>
 
@@ -70,6 +93,8 @@ export default {
                 goods_weight: 0, 
                 goods_number: 0,
                 goods_cat: 0, //商品所属的分类，级联选择框的双向绑定的数组
+                //图片数组
+                pics: [],
             },
             addGoodsRules: {
                 goods_name: [
@@ -96,6 +121,17 @@ export default {
                 value: 'cat_id',
                 children: 'children',
             }, 
+            manyTableData: [],
+            onlyTableData: [],
+            //上传图片的地址
+            uploadURL: 'https://www.liulongbin.top:8888/api/private/v1/upload',
+            //上传图片的请求头
+            headerObj: {
+                Authorization: window.sessionStorage.getItem('token')
+            },
+            //预览图片的URL
+            previewPath: '',
+            previewVisible: false,
         }
     },
     created() {
@@ -123,14 +159,94 @@ export default {
         },
         // tabs 标签页的切换控制
         beforeLeave(activeName, oldActiveName) {
-            if (oldActiveName === '0' && this.addGoodsForm.goods_cat.length !== 3) {
-                this.$message.error('请先选择商品分类！')
-                return false
+            // if (oldActiveName === '0' && this.addGoodsForm.goods_cat.length !== 3) {
+            //     this.$message.error('请先选择商品分类！')
+            //     return false
+            // }
+        },
+        tabClick() {
+            if(this.activeIndex === '1') { 
+                this.getAttributesData()
+            }
+            else if(this.activeIndex === '2') { 
+                this.getAttributesData()
             }
         },
+        async getAttributesData() {
+            const {data: res} = await this.$http.get(`categories/${this.cateId}/attributes`, {params: {sel: this.sel}})
+            if (res.meta.status !== 200) {
+                return this.$message.error('获取列表失败！')
+            }
+            // 赋值之前，先把字符串分割成数组
+            res.data.forEach(element => {
+                element.attr_vals = element.attr_vals.split('')
+            })
+            console.log(res.data)
+
+            if (this.sel === 'many') {
+                this.manyTableData = res.data
+            }
+            else {
+                this.onlyTableData = res.data
+            }
+        },
+        handlePreview(file) {
+            console.log(file)
+            this.previewPath = file.response.data.url
+            this.previewVisible = true
+        },
+        previewDialogClosed() {
+            this.previewVisible = false
+        },
+        handleRemove(file) {
+            console.log(file) //file 就是上传接口返回的信息
+            //1、获取图片的临时路径
+            const filePath = file.response.data.tmp_path
+            //2、从 pics 数组中，找到图片对应的索引值
+            const index = this.addGoodsForm.pics.findIndex(x => {
+                x.pic === filePath
+            })
+            //3、调用数组 splice 方法，把图片对象移除
+            this.addGoodsForm.pics.splice(i, 1)
+            console.log(this.addGoodsForm)
+        },
+        //监听图片上传成功的回掉
+        handleSuccess(response) {
+            // 拼接获取一个图片对象
+            const picInfo = { pic: response.data.tmp_path}
+            // 将图片对象 push 到 pics 数组中
+            this.addGoodsForm.pics.push(picInfo)
+            console.log(this.addGoodsForm)
+        },
+    },
+    computed: {
+        cateId() {
+            if(this.addGoodsForm.goods_cat.length === 3) {
+                return this.addGoodsForm.goods_cat[2]
+            }
+            return null
+        },
+        sel() {
+            if (this.activeIndex === '1') { 
+                return 'many'
+            }
+            else if (this.activeIndex === '2') { 
+                return 'only'
+            }
+            return null
+        }
     }
 }
 </script>
 
 <style lang="less" scoped>
+
+.el-checkbox {
+    margin-right: 5px;
+}
+
+.previewImg{
+    width: 100%;
+}
+
 </style>
