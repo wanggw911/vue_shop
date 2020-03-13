@@ -231,10 +231,37 @@ export default {
         },
         addGoodsAction() {
             console.log(this.addGoodsForm)
-            //深拷贝表单form，避免对原数据造成影响
-            const form = _.cloneDeep(this.addGoodsForm)
-            form.goods_cat = form.goods.cat.jion(',')
-            
+            //先进行表单数据校验
+            this.$refs.addParamFormRef.validate(async valid => {
+                //深拷贝表单form，避免对原数据造成影响
+                const form = _.cloneDeep(this.addGoodsForm)
+                form.goods_cat = form.goods.cat.jion(',')
+                //处理动态参数
+                this.manyTableData.forEach(item => {
+                    const newInfo = {
+                        attr_id: item.attr_id,
+                        attr_value: item.attr_vals.jion(' ')
+                    }
+                    this.addGoodsForm.attrs.push(newInfo)
+                })
+                //处理静态参数
+                this.onlyTableData.forEach(item => {
+                    const newInfo = {
+                        attr_id: item.attr_id,
+                        attr_value: item.attr_vals.jion(' ')
+                    }
+                    this.addGoodsForm.attrs.push(newInfo)
+                })
+                form.attrs = this.addGoodsForm.attrs
+                //发起请求添加商品
+                const {data: res} = await this.$http.post('goods', form)
+                if (res.meta.status !== 201) {
+                    return this.$message.error('添加商品失败！')
+                }
+                this.$message.success('添加商品成功！')
+                //路由跳转
+                this.$router.push('/goods')
+            })
         },
     },
     computed: {
