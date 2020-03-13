@@ -27,8 +27,9 @@
             <!-- 只允许 form 嵌套 tabs，不允许 tabs 嵌套 form -->
             <el-form :model="addGoodsForm" :rules="addGoodsRules" ref="ruleForm" label-width="100px" label-position="top">
                 <!-- style="height: 200px;" -->
-                <el-tabs :tab-position="'left'" v-model="activeIndex">
-                    <el-tab-pane label="基本信息" name="0">
+                <el-tabs :tab-position="'left'" v-model="activeIndex" :before-leave="beforeLeave">
+
+                    <el-tab-pane label="基本信息" name="0">    
                         <el-form-item label="商品名称" prop="goods_name">
                             <el-input v-model="addGoodsForm.goods_name"></el-input>
                         </el-form-item>
@@ -46,9 +47,8 @@
                             <el-cascader v-model="addGoodsForm.goods_cat" expand-trigger="hover" :options="categoryList" :props="cascaderProps" @change="cascaderHandleChange" clearable>
                             </el-cascader>
                         </el-form-item>
-
-                        
                     </el-tab-pane>
+
                     <el-tab-pane label="商品参数" name="1">商品参数</el-tab-pane>
                     <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
                     <el-tab-pane label="商品照片" name="3">商品照片</el-tab-pane>
@@ -120,7 +120,13 @@ export default {
                 this.addGoodsForm.goods_cat = []
                 return
             }
-            
+        },
+        // tabs 标签页的切换控制
+        beforeLeave(activeName, oldActiveName) {
+            if (oldActiveName === '0' && this.addGoodsForm.goods_cat.length !== 3) {
+                this.$message.error('请先选择商品分类！')
+                return false
+            }
         },
     }
 }
