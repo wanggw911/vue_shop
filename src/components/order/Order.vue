@@ -20,9 +20,6 @@
                         <el-button slot="append" icon="el-icon-search" @click="getOrderList"></el-button>
                     </el-input>
                 </el-col>
-                <el-col :span="4">
-                    <el-button type="primary" @click="goAddGoodsPage()">添加商品</el-button>
-                </el-col>
             </el-row>
 
             <!-- 用户列表区域 --> 
@@ -49,8 +46,8 @@
                 </el-table-column>
                 <el-table-column label="操作" width="130px">
                     <template slot-scope="scope">
-                        <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditGoodsInfoDialog(scope.row)"></el-button>
-                        <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeGoodsById(scope.row.goods_id)"></el-button>
+                        <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditOrderDialog(scope.row)"></el-button>
+                        <el-button type="danger" icon="el-icon-delete" size="mini" @click="showProgressBox(scope.row)"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -68,6 +65,37 @@
 
         </el-card>
 
+        <!-- 修改订单地址对话框 -->
+        <el-dialog title="添加用户" :visible.sync="editOrderDialogVisible" width="50%" @close="editOrderDialogClosed">
+            <!-- 内容主体区 -->
+            <el-form :model="editOrderForm" :rules="editOrderRules" ref="editOrderFormRef" label-width="70px">
+                <el-form-item label="省市区/县" prop="address1">
+                    <!-- <el-input v-model="editOrderForm.address1"></el-input> -->
+                    <!-- 级联显示省市区 -->
+                    <!-- <el-cascader v-model="editOrderForm.address1" expand-trigger="hover" :options="cityData" :props="cascaderProps" @change="cascaderHandleChange" clearable>
+                    </el-cascader> -->
+                </el-form-item>
+                <el-form-item label="详细地址" prop="address2">
+                    <el-input v-model="editOrderForm.address2"></el-input>
+                </el-form-item>
+            </el-form>
+            <!-- 底部区域 -->
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editOrderDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="editOrder">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 物流进度对话框 -->
+        <el-dialog title="物流进度" :visible.sync="progressDialogVisible" width="50%">
+            <!-- 物流进度条 -->
+            <el-timeline>
+                <el-timeline-item v-for="(activity, index) in progressInfo" :key="index" :timestamp="activity.time">
+                    {{activity.content}}
+                </el-timeline-item>
+            </el-timeline>
+        </el-dialog>
+
     </div>
 </template>
 
@@ -83,6 +111,23 @@ export default {
                 pagesize: 3,
             },
             total: 0,
+            editOrderForm: {
+                address1: [],
+                address2: '',
+            },
+            editOrderRules: {
+                address1: [
+                    { required: true, message: '请输入邮箱', trigger: 'blur' },
+                ],
+                address2: [
+                    { required: true, message: '请输入手机号', trigger: 'blur' },
+                ],
+            },
+            editOrderDialogVisible: false,
+            cityData:[],
+            progressDialogVisible: false,
+            // 物流信息
+            progressInfo: [],
         }
     },
     created() {
@@ -111,6 +156,25 @@ export default {
         handleCurrentChange(newPage) {
             this.queryInfo.pagenum = newPage
             this.getOrderList()
+        },
+        showEditOrderDialog() {
+            this.editOrderDialogVisible = true
+        },
+        editOrderDialogClosed() {
+            this.$refs.editOrderFormRef.resetFields()
+        },
+        editOrder() {
+            this.editOrderDialogVisible = false
+        },
+        async showProgressBox(row) {
+            const {data: res} = await this.$http.get('/kuaidi/804909574412544580')
+            console.log(res)
+            if(res.meta.status !== 200) {
+                return this.$message.error('获取物流进度失败！')
+            }
+
+            this.progressInfo = res.data
+            this.progressDialogVisible = true
         },
     }
 }

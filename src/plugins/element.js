@@ -19,7 +19,8 @@ import {
     Tabs, TabPane,
     Steps, Step,
     Checkbox, CheckboxGroup,
-    Upload
+    Upload,
+    Timeline, TimelineItem
 } from 'element-ui'
 
 // 注册成全局可以用的组件
@@ -58,5 +59,7 @@ Vue.use(Step)
 Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
 Vue.use(Upload)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
