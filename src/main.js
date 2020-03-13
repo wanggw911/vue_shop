@@ -17,10 +17,23 @@ import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
 
+// 导入 NProgress 包对应的 js 和 css
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
 // 配置请求的根路径
 axios.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
+// 在 request 拦截器中，展示进度条：NProgress.start()
 axios.interceptors.request.use(config => {
   //console.log(config)
+  NProgress.start()
+  config.headers.Authorization = window.sessionStorage.getItem('token')
+  return config
+})
+// 在 request 拦截器中，展示进度条：NProgress.done()
+axios.interceptors.response.use(config => {
+  //console.log(config)
+  NProgress.done()
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })
