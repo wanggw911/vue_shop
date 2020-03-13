@@ -36,7 +36,7 @@
                         <el-table-column type="expand">
                             <template slot-scope="scope">
                                 <!-- for循环展示所有的标签 -->
-                                <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable>{{item}}</el-tag>
+                                <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable @close="handleTagClose(i, scope.row)">{{item}}</el-tag>
                                 <!-- 添加tag的输入框 -->
                                 <el-input
                                     class="input-new-tag"
@@ -308,7 +308,7 @@ export default {
             this.$message.success('删除参数成功')
             this.getAttributesData()
         },
-        async handleInputConfirm(row) {
+        handleInputConfirm(row) {
             if(row.inputValue.trim().length === 0) {
                 row.inputValue = ''
                 row.inputVisible = false
@@ -319,15 +319,7 @@ export default {
             row.inputValue = ''
             row.inputVisible = false
             //网络请求添加标签
-            const {data: res} = await this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`, {
-                attr_name: row.attr_name,
-                attr_sel: row.attr_sel,
-                attr_vals: row.attr_vals.join(' '),
-            })
-            if (res.meta.status !== 200) {
-                return this.$message.error('添加标签失败')
-            }
-            this.$message.success('添加标签成功')
+            this.modifyTag(row)
         },
         showInput(row) {
             row.inputVisible = true
@@ -337,6 +329,23 @@ export default {
                 this.$refs.saveTagInput.$refs.input.focus();
             })
         },
+        handleTagClose(i, row) {
+            //先删除标签，数组删除元素
+            row.attr_vals.splice(i, 1)
+            //再网络请求修改
+            this.modifyTag(row)
+        },
+        async modifyTag(row) {
+            const {data: res} = await this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`, {
+                attr_name: row.attr_name,
+                attr_sel: row.attr_sel,
+                attr_vals: row.attr_vals.join(' '),
+            })
+            if (res.meta.status !== 200) {
+                return this.$message.error('添加标签失败')
+            }
+            this.$message.success('添加标签成功')
+        }
     }
 }
 </script>
