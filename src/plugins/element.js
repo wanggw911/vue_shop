@@ -16,7 +16,8 @@ import {
     Select, Option,
     Cascader,
     Alert,
-    Tabs, TabPane
+    Tabs, TabPane,
+    Steps, Step
 } from 'element-ui'
 
 // 注册成全局可以用的组件
@@ -50,5 +51,7 @@ Vue.use(Cascader)
 Vue.use(Alert)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Steps)
+Vue.use(Step)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

@@ -127,6 +127,10 @@ export default {
             this.$message.success('删除商品成功')
             this.getGoodsList()
         },
+        goAddGoodsPage() {
+            //页面跳转
+            this.$router.push('/goods/add')
+        },
     }
 }
 </script>
