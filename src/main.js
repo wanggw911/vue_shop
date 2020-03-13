@@ -10,6 +10,12 @@ import './assets/fonts/iconfont.css'
 import axios from 'axios'
 // 导入第三方UI组件
 import TreeTable from 'vue-table-with-tree-grid'
+// 导入第三方富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+//   富文本编辑器的样式
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
 
 // 配置请求的根路径
 axios.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
@@ -24,6 +30,8 @@ Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.component('tree-table', TreeTable)
+
+Vue.use(VueQuillEditor)
 
 // 全局时间过滤器
 Vue.filter('dateFormat', function(originVal) {

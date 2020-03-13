@@ -69,7 +69,14 @@
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                     </el-tab-pane>
-                    <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
+
+                    <el-tab-pane label="商品内容" name="4">
+                        <!-- 富文本编辑器组件 -->
+                        <quill-editor v-model="addGoodsForm.goods_introduce">
+                        </quill-editor>
+                        <!-- 添加商品的按钮 -->
+                        <el-button type="primary" class="btnAdd" @click="addGoodsAction">添加商品</el-button>
+                    </el-tab-pane>
                 </el-tabs>
             </el-form>
         </el-card>
@@ -83,6 +90,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
     data() {
         return {
@@ -95,6 +104,8 @@ export default {
                 goods_cat: 0, //商品所属的分类，级联选择框的双向绑定的数组
                 //图片数组
                 pics: [],
+                //商品介绍
+                goods_introduce: '',
             },
             addGoodsRules: {
                 goods_name: [
@@ -218,6 +229,13 @@ export default {
             this.addGoodsForm.pics.push(picInfo)
             console.log(this.addGoodsForm)
         },
+        addGoodsAction() {
+            console.log(this.addGoodsForm)
+            //深拷贝表单form，避免对原数据造成影响
+            const form = _.cloneDeep(this.addGoodsForm)
+            form.goods_cat = form.goods.cat.jion(',')
+            
+        },
     },
     computed: {
         cateId() {
@@ -247,6 +265,10 @@ export default {
 
 .previewImg{
     width: 100%;
+}
+
+.btnAdd {
+    margin-top: 10px;
 }
 
 </style>
