@@ -206,6 +206,8 @@ export default {
             console.log(this.selectedKeys)
             if (this.selectedKeys.length !== 3) {
                 this.selectedKeys = []
+                this.manyTableData = []
+                this.onlyTableData = []
                 return
             }
             
